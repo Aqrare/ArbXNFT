@@ -1,0 +1,2 @@
+export const goerliContractAddress = '0x0c3B386EFA34B81e275F995EDB9A739fb32B85f5'
+export const goerliArbitrumContract = '0xFd6123d0BfA2d379319740E557A4B1e6c9b842d9'

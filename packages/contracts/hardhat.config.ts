@@ -1,32 +1,27 @@
-import "@nomicfoundation/hardhat-toolbox";
-import "@openzeppelin/hardhat-upgrades";
-import "./tasks/deploy";
-import "./tasks/verify";
-
 import { HardhatUserConfig } from "hardhat/config";
-
-import { accounts, ethersanApiKey, useHardhatFork } from "./lib/env";
-import networks from "./networks.json";
+import "@nomicfoundation/hardhat-toolbox";
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.15",
+  solidity: {
+    compilers: [
+      {
+        version: "0.6.11",
+      },
+      {
+        version: "0.8.17",
+      },
+    ],
+  },
   networks: {
-    hardhat: useHardhatFork
-      ? {
-          forking: {
-            url: networks.rinkeby.rpc,
-          },
-        }
-      : {},
-    rinkeby: {
-      chainId: networks.rinkeby.chainId,
-      url: networks.rinkeby.rpc,
-      accounts,
+    arbitrumGoerli: {
+      chainId: 421613,
+      url: `https://goerli-rollup.arbitrum.io/rpc/`,
     },
   },
   etherscan: {
     apiKey: {
-      rinkeby: ethersanApiKey,
+      goerli: "Z1TKKCFKK9GTVJ3FZP3IA4K8SINX16NCJ3",
+      arbitrumGoerli: "NV6614SZM1P3EB3YKUTRNWWV6V81Y17EA7",
     },
   },
 };
