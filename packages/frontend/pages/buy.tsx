@@ -80,26 +80,6 @@ const Buy: NextPage = () => {
     setPrice(hexToDec(price._hex))
   }
 
-  const getTokenURI2 = async () => {
-    if (!signer) return
-    try {
-      const contractABI = [
-        'function tokenURI(uint256 _tokenId) external view returns (string memory)',
-      ]
-      const contract = new ethers.Contract(
-        nftContractAddress,
-        contractABI,
-        signer
-      )
-
-      const result = await contract.tokenURI(tokenId)
-      setTokenUri(result)
-      return result
-    } catch (err) {
-      throw err
-    }
-  }
-
   const getTokenURI = async () => {
     const nftContractABI = [
       'function tokenURI(uint256 _tokenId) external view returns (string memory)',
@@ -206,11 +186,13 @@ const Buy: NextPage = () => {
 
   const buyNFTFromL2ToL1 = async () => {
     if (!signer || !address) return
+    console.log('hello')
     const contract = new ethers.Contract(
       goerliArbitrumContract,
       ArbXNFTL2ABI,
       signer
     )
+    console.log(nftContractAddress, tokenId, price)
     const setBuyingTx = await contract.buy(nftContractAddress, tokenId, {
       value: price,
     })
@@ -237,7 +219,6 @@ const Buy: NextPage = () => {
             placeholder="Token ID"
             onChange={handleChangeTokenId}
           ></Input>
-          <Button onClick={getTokenURI2}></Button>
           {chain?.id == 5 ? (
             <Button mt="4" colorScheme="teal" onClick={searchL1}>
               Search on Goerli
@@ -261,17 +242,16 @@ const Buy: NextPage = () => {
           >
             <Text>{name}</Text>
             <Text>{description}</Text>
-            <Text>{image}</Text>
-            <Box boxSize="sm">
-              <Image src={image} alt={'image'} />
-            </Box>
+            <Image ml={16} src={image} alt={'image'} />
             <Text>{ethers.utils.formatEther(price)} ETH</Text>
             <Button
               mt="4"
               colorScheme="teal"
               onClick={chain?.id == 5 ? buyNFTFromL1ToL2 : buyNFTFromL2ToL1}
             >
-              {chain?.id == 5 ? 'Buy Arbitrum NFT' : 'Buy Ethereum NFT'}
+              {chain?.id == 5
+                ? 'Buy Arbitrum NFT from Ethereum'
+                : 'Buy Ethereum NFT from Arbitrum'}
             </Button>
           </Box>
         </Flex>
